@@ -19,6 +19,7 @@ export default function RemoveBtn({ id }) {
     }
   };
 
+
   return (
     <button onClick={removeTopic} className="text-red-400">
       <HiOutlineTrash size={24} />

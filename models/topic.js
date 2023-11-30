@@ -6,6 +6,7 @@ const topicSchema = new Schema(
     description: String,
     date: String,
     time: String,
+    isChecked: { type: Boolean, default: false },
   },
   {
     timestamps: true,

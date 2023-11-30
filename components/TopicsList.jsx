@@ -3,9 +3,8 @@ import RemoveBtn from "./RemoveBtn";
 import { HiPencilAlt } from "react-icons/hi";
 
 const getTopics = async () => {
-  const apiUrl = process.env.API_URL;
   try {
-    const res = await fetch(`${apiUrl}/api/topics`, {
+    const res = await fetch("http://localhost:3000/api/topics", {
       cache: "no-store",
     });
 
@@ -13,49 +12,43 @@ const getTopics = async () => {
       throw new Error("Failed to fetch topics");
     }
 
-    const data = await res.json();
-
-    if (!data || !data.topics) {
-      throw new Error("Invalid data structure from API");
-    }
-
-    return data.topics;
+    return res.json();
   } catch (error) {
-    console.error("Error loading topics: ", error);
-    throw error;
+    console.log("Error loading topics: ", error);
   }
 };
 
 export default async function TopicsList() {
-  try {
-    const topics = await getTopics();
+  const { topics } = await getTopics();
 
-    return (
-      <>
-        {topics.map((t) => (
-          <div
-            key={t._id}
-            className="p-4 border border-slate-300 my-3 flex justify-between gap-5 items-start"
-          >
-            <div>
-              <h2 className="font-bold text-2xl">{t.title}</h2>
-              <div>{t.description}</div>
-              <div>{t.time}</div>
-              <div>{t.date}</div>
-            </div>
-
-            <div className="flex gap-2">
-              <RemoveBtn id={t._id} />
-              <Link href={`/editTopic/${t._id}`}>
-                <HiPencilAlt size={24} />
-              </Link>
-            </div>
+  return (
+    <>
+      {topics.map((t) => (
+        <div
+          key={t._id}
+          className="p-4 border border-slate-300 my-3 flex justify-between gap-5 items-start"
+        >
+          <div>
+            <h2 className="font-bold text-2xl">{t.title}</h2>
+            <div>{t.description}</div>
+            <div>{t.date}</div>
+            <div>{t.time}</div>
           </div>
-        ))}
-      </>
-    );
-  } catch (error) {
-    console.error("Error in TopicsList component: ", error);
-    return <div>Error loading topics</div>;
-  }
+
+          <div className="flex gap-2">
+            <button className={`py-2 ml-2 px-2 ${t.isChecked
+              ? "text-white green rounded-md cursor-pointer"
+              : "text-white bg-red-700 rounded-md cursor-pointer"
+              }`}>
+              {t.isChecked ? "To`lov qilingan" : "To`lov qilinmagan"}
+            </button>
+            <RemoveBtn id={t._id} />
+            {/* <Link href={`/editTopic/${t._id}`}>
+              <HiPencilAlt size={24} />
+            </Link> */}
+          </div>
+        </div>
+      ))}
+    </>
+  );
 }
